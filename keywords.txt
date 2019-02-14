@@ -1,0 +1,27 @@
+TDSs KEYWORD1
+begin KEYWORD2
+MagneticAngle KEYWORD2
+MagneticAngleRadian KEYWORD2
+Tesla KEYWORD2
+AccelX KEYWORD2
+AccelY KEYWORD2
+AccelZ KEYWORD2
+GyroX KEYWORD2
+GyroY KEYWORD2
+GyroZ KEYWORD2
+GetPressure KEYWORD2
+switchAnalog KEYWORD2
+beginDigital KEYWORD2
+beginBuzzer KEYWORD2
+PlayWavFile KEYWORD2
+PlayWave KEYWORD2
+playTone KEYWORD2
+Thermistor KEYWORD2
+clearPixels KEYWORD2
+setPixelColor KEYWORD2
+setBrightness KEYWORD2
+colorWheel KEYWORD2
+rightButton KEYWORD2
+leftButton KEYWORD2
+slideSwitch KEYWORD2
+SoundPressure　KEYWORD2
