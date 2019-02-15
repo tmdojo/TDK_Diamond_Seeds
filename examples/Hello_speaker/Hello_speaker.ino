@@ -1,7 +1,7 @@
 #include <TDK_Diamond_Seeds.h>
 
 void setup() {
-  TDSs.beginBuzzer();
+  TDSs.begin();
 }
 
 void loop() {
