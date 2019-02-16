@@ -157,3 +157,29 @@ void AudioZeroClass::tcDisable()
 }
 
 AudioZeroClass AudioZero;
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+void Audio_Handler (void)
+{
+  if (__SampleIndex < __NumberOfSamples - 1)
+  {
+    analogWrite(A0, __WavSamples[__SampleIndex++]);
+
+    // Clear the interrupt
+    TC5->COUNT16.INTFLAG.bit.MC0 = 1;
+  }
+  else
+  {
+    __SampleIndex = 0;
+    TC5->COUNT16.INTFLAG.bit.MC0 = 1;
+	}
+}
+
+void TC5_Handler (void) __attribute__ ((weak, alias("Audio_Handler")));
+
+#ifdef __cplusplus
+}
+#endif
