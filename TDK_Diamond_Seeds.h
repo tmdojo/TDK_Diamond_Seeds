@@ -22,7 +22,7 @@
 #include <SPI.h>
 
 #include "utility/Adafruit_ADS1015.h"
-#include "utility/Adafruit_ICM20789_U.h "
+#include "utility/Adafruit_ICM20789_U.h"
 #include "utility/Yurikleb_DRV2667.h"
 #include "utility/AudioZero.h"
 #include "utility/Adafruit_CPlay_NeoPixel.h"
