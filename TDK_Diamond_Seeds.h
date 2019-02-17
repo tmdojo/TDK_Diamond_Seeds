@@ -26,7 +26,7 @@
 #include "utility/Yurikleb_DRV2667.h"
 #include "utility/AudioZero.h"
 #include "utility/Adafruit_CPlay_NeoPixel.h"
-
+#include "utility/Adafruit_Sensor.h"
 
 #include "utility/I2S.h"
 
