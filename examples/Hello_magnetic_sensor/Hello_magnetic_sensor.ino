@@ -13,10 +13,13 @@ void loop(void)
   Angle_rad = TDSs.MagneticAngleRadian();
   Tesla = TDSs.Tesla();
 
+  Serial.print("Angle: ");
   Serial.print(Angle);
-  Serial.print(",");
+  Serial.print(" ,");
+  Serial.print("Angle(rad): ");
   Serial.print(Angle_rad);
-  Serial.print(",");
+  Serial.print(" ,");
+  Serial.print("Tesla: ");
   Serial.println(Tesla);
 
   delay(100);

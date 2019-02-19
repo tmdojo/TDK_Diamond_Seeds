@@ -12,13 +12,13 @@ void loop() {
   Gy = TDSs.GyroY();
   Gz = TDSs.GyroZ();
 
-  Serial.print("Gx ");
+  Serial.print("Gx: ");
   Serial.print(Gx);
-  Serial.print(",");
-  Serial.print("Gy ");
+  Serial.print(" ,");
+  Serial.print("Gy: ");
   Serial.print(Gy);
-  Serial.print(",");
-  Serial.print("Gz ");
+  Serial.print(" ,");
+  Serial.print("Gz: ");
   Serial.println(Gz);
 
   delay(100);

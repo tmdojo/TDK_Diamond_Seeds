@@ -12,13 +12,13 @@ void loop() {
   Ay = TDSs.AccelY();
   Az = TDSs.AccelZ();
 
-  Serial.print("Ax ");
+  Serial.print("Ax: ");
   Serial.print(Ax);
-  Serial.print(",");
-  Serial.print("Ay ");
+  Serial.print(" ,");
+  Serial.print("Ay: ");
   Serial.print(Ay);
-  Serial.print("Az ");
-  Serial.print(",");
+  Serial.print("Az: ");
+  Serial.print(" ,");
   Serial.println(Az);
 
   delay(100);
