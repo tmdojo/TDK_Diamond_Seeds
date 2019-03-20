@@ -36,7 +36,7 @@ void AudioZeroClass::begin(uint32_t sampleRate) {
 	__WavSamples = (uint8_t *) malloc(__NumberOfSamples * sizeof(uint8_t));
 
 	/*Modules configuration */
-  	dacConfigure();
+  dacConfigure();
 	tcConfigure(sampleRate);
 }
 

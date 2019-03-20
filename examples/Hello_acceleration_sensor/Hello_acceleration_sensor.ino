@@ -17,8 +17,8 @@ void loop() {
   Serial.print(" ,");
   Serial.print("Ay: ");
   Serial.print(Ay);
-  Serial.print("Az: ");
   Serial.print(" ,");
+  Serial.print("Az: ");
   Serial.println(Az);
 
   delay(100);
