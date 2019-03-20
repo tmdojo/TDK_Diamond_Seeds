@@ -66,7 +66,6 @@ void TDK_DiamondSeeds::begin(void){
   accel.begin();
   gyro.begin();
   pressure.begin();
-  drv.begin();
 
   pinMode(AUDIOPIN, OUTPUT);
   pinMode(THERMISTORPIN,INPUT);
@@ -182,26 +181,30 @@ void TDK_DiamondSeeds::switchAnalog(void){
 
   delay(100);
 
-// setup SD-card
-  if (SD.begin(4)) {
-
-    // 44100kHz stereo => 88200 sample rate
-    AudioZero.begin(44100*2);
-    switch_AS=true;
-
-  }
-
   //drv.begin();
   drv.setToAnalogInput();  //Swithch To Analog
+
+  SD.begin(4);
+// setup SD-card
+  //if (SD.begin(4)) {
+
+    // 44100kHz stereo => 88200 sample rate
+  //  AudioZero.begin(44100*2);
+//    switch_AS=true;
+
+//  }
+
 
 }
 
 void TDK_DiamondSeeds::PlayWavFile(char wavfile[]){
 
+  AudioZero.begin(44100*2);
   File myFile = SD.open(wavfile);
   Serial.print("Play:");
   Serial.println(wavfile);
   AudioZero.play(myFile);
+  AudioZero.end();
 
 }
 
