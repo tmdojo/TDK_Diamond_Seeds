@@ -131,37 +131,37 @@ float TDK_DiamondSeeds::Tesla(void){
 
 float TDK_DiamondSeeds::AccelX(void){
   float ax;
-  ax = accel.getX()/100;
+  ax = accel.getX()*2*2/pow(2,16);
   return ax;
 }
 
 float TDK_DiamondSeeds::AccelY(void){
   float ay;
-  ay = accel.getY()/100;
+  ay = accel.getY()*2*2/pow(2,16);
   return ay;
 }
 
 float TDK_DiamondSeeds::AccelZ(void){
   float az;
-  az = accel.getZ()/100;
+  az = accel.getZ()*2*2/pow(2,16);
   return az;
 }
 
 float TDK_DiamondSeeds::GyroX(void){
   float gx;
-  gx = gyro.getX()/100;
+  gx = gyro.getX()*2*250/pow(2,16);
   return gx;
 }
 
 float TDK_DiamondSeeds::GyroY(void){
   float gy;
-  gy = gyro.getY()/100;
+  gy = gyro.getY()*2*250/pow(2,16);
   return gy;
 }
 
 float TDK_DiamondSeeds::GyroZ(void){
   float gz;
-  gz = gyro.getZ()/100;
+  gz = gyro.getZ()*2*250/pow(2,16);
   return gz;
 }
 
@@ -185,15 +185,6 @@ void TDK_DiamondSeeds::switchAnalog(void){
   drv.setToAnalogInput();  //Swithch To Analog
 
   SD.begin(4);
-// setup SD-card
-  //if (SD.begin(4)) {
-
-    // 44100kHz stereo => 88200 sample rate
-  //  AudioZero.begin(44100*2);
-//    switch_AS=true;
-
-//  }
-
 
 }
 
