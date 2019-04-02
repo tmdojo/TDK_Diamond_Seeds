@@ -63,7 +63,7 @@ void setup(void){
     Gx = TDSs.GyroX();
     Gy = TDSs.GyroY();
     Gz = TDSs.GyroZ();
-    if(abs(Gx+Gy+Gz-Gx_i-Gy_i-Gz_i)>500){
+    if(abs(Gx+Gy+Gz-Gx_i-Gy_i-Gz_i)>200){
       TDSs.setPixelColor(1, 0,   255,   0);
       Check2 = false;
       Serial.println("Puzzle2:use gyrosensor");
@@ -133,7 +133,7 @@ void setup(void){
     Ay = TDSs.AccelY();
     Az = TDSs.AccelZ();
     Serial.println(abs(Ax+Ay+Az-Ax_i-Ay_i-Az_i));
-    if(abs(Ax+Ay+Az-Ax_i-Ay_i-Az_i)>300){
+    if(abs(Ax+Ay+Az-Ax_i-Ay_i-Az_i)>2){
       TDSs.setPixelColor(7, 0,   255,   0);
       Check7 = false;
     }
