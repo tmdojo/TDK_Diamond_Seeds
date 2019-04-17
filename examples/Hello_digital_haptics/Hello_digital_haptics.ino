@@ -6,6 +6,10 @@
 // Duration     --  Cycles 0-255
 // Envelope     --  (Ramp up + down)
 // Max 60 waves per array !!
+// 
+// Refer to DRV2667 datasheet for detail
+// Table3. Waveform Chunk Bytes for Synthesizer on page 19
+// http://www.ti.com/lit/ds/symlink/drv2667.pdf
 
 byte WaveForm[1][4] = {
                       {255, 200, 50, 0x09}
