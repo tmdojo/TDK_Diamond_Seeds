@@ -1,5 +1,7 @@
 #include <TDK_Diamond_Seeds.h>
 //wav file have to save 88200Hz, monaural,8bit
+// Refer DS Wiki for how-to
+// https://github.com/tmdojo/TDK_Diamond_Seeds/wiki/How-to-convert-audio-file-to-play-on-DS
 
 void setup()
 {
