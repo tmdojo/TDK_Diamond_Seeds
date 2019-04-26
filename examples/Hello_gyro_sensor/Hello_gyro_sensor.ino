@@ -8,6 +8,8 @@ void setup() {
 
 void loop() {
 
+  // unit is in Degrees/s
+
   Gx = TDSs.GyroX();
   Gy = TDSs.GyroY();
   Gz = TDSs.GyroZ();

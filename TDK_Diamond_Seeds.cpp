@@ -129,36 +129,60 @@ float TDK_DiamondSeeds::Tesla(void){
 
 }
 
+// sensors_event_t is defined in Adafruit_Sensor.h
+// You can get acceleration values in m/s^2 unit
+bool TDK_DiamondSeeds::AccelEvent(sensors_event_t *event){
+  return accel.getEvent(event);
+}
+
+// acceleration in g
+// this is only valied with default range!
 float TDK_DiamondSeeds::AccelX(void){
   float ax;
   ax = accel.getX()*2*2/pow(2,16);
   return ax;
 }
 
+// acceleration in g
+// this is only valied with default range!
 float TDK_DiamondSeeds::AccelY(void){
   float ay;
   ay = accel.getY()*2*2/pow(2,16);
   return ay;
 }
 
+// acceleration in g
+// this is only valied with default range!
 float TDK_DiamondSeeds::AccelZ(void){
   float az;
   az = accel.getZ()*2*2/pow(2,16);
   return az;
 }
 
+// sensors_event_t is defined in Adafruit_Sensor.h
+// You can get angular velocity values in rad/s unit
+bool TDK_DiamondSeeds::GyroEvent(sensors_event_t *event){
+  return gyro.getEvent(event);
+}
+
+// angular velocity in Degrees/s
+// this is only valied with default range!
 float TDK_DiamondSeeds::GyroX(void){
   float gx;
   gx = gyro.getX()*2*250/pow(2,16);
   return gx;
 }
 
+// angular velocity in Degrees/s
+// this is only valied with default range!
 float TDK_DiamondSeeds::GyroY(void){
   float gy;
   gy = gyro.getY()*2*250/pow(2,16);
   return gy;
 }
 
+// angular velocity in Degrees/s
+// this is only valied with default range!
 float TDK_DiamondSeeds::GyroZ(void){
   float gz;
   gz = gyro.getZ()*2*250/pow(2,16);
