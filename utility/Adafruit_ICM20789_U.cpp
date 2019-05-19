@@ -25,7 +25,7 @@
 
 #include "Adafruit_ICM20789_U.h"
 
-#define DEBUG_READING true
+#define DEBUG_READING false
 
 // this is necessary for sprintf work for large float value
 #if DEBUG_READING
