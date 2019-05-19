@@ -11,7 +11,7 @@ void setup() {
 void loop() {
 
   // measurement takes about 6.5ms in Normal mode
-  // measurement takes about 25ms in Low Noise mode
+  // measurement takes about 25ms in Low Noise mode (default)
   Pa=TDSs.GetPressure();
 
   // GetPressure returns in HectoPascals

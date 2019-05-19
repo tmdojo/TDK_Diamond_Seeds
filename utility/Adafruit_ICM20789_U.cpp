@@ -687,18 +687,18 @@ void Adafruit_ICM20789_BARO_Unified::updateRawData(void) {
   // Send a measurement command (Trasmit P first, normal mode)
   Wire.beginTransmission(ICM20789_I2C_ADDRESS_PRESSURE);
   // (Trasmit P first, normal mode)
-  Wire.write(0x48);
-  Wire.write(0xA3);
+  // Wire.write(0x48);
+  // Wire.write(0xA3);
   // (Trasmit P first, Low Noise mode)
-  //Wire.write(0x50);
-  //Wire.write(0x59);
+  Wire.write(0x50);
+  Wire.write(0x59);
 
   Wire.endTransmission();
 
   // There is a maximum delay of 6.3 mseconds after requesting new data for normal mode
-  delayMicroseconds(6500);
+  // delayMicroseconds(6500);
   // There is a maximum delay of 23.8 mseconds after requesting new data for low noise mode
-  //delay(25);
+  delay(25);
 
   // Get the pressure and temperature raw data
   Wire.requestFrom(ICM20789_I2C_ADDRESS_PRESSURE, 9);
