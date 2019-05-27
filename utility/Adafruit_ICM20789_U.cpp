@@ -25,6 +25,15 @@
 
 #include "Adafruit_ICM20789_U.h"
 
+#define DEBUG_READING false
+
+// this is necessary for sprintf work for large float value
+#if DEBUG_READING
+  asm(".global _printf_float");
+#endif
+
+void pp_hex(char c);
+
 // Read and write registers are not made part of the class,
 // so these can be used manually without class objects,
 // and to allow reuse with the three diferent drivers
@@ -564,8 +573,7 @@ Adafruit_ICM20789_BARO_Unified::Adafruit_ICM20789_BARO_Unified(int32_t sensorID,
 /**************************************************************************/
 bool Adafruit_ICM20789_BARO_Unified::begin() {
   int16_t otp[4];
-  int8_t out[3];
-
+  uint8_t out[3];
 
   // This start is in configureICM20789
   Wire.begin();
@@ -594,6 +602,11 @@ bool Adafruit_ICM20789_BARO_Unified::begin() {
 
   // Read OTP values
 	for (int i = 0; i < 4; i++) {
+    if (DEBUG_READING){
+      Serial.print("otp_data_read_");
+      Serial.print(i);
+      Serial.print(" = [");
+    }
 		Wire.beginTransmission(ICM20789_I2C_ADDRESS_PRESSURE);
     Wire.write(0xC7);
     Wire.write(0xF7);
@@ -604,6 +617,12 @@ bool Adafruit_ICM20789_BARO_Unified::begin() {
       out[0] = Wire.read();
       out[1] = Wire.read();
       out[2] = Wire.read();
+      if (DEBUG_READING){
+        pp_hex((char)out[0]); Serial.print(",");
+        pp_hex((char)out[1]); Serial.print(",");
+        pp_hex((char)out[2]);
+        Serial.println("]");
+      }
     }
     else{
       Serial.print("Error requesting data");
@@ -611,10 +630,18 @@ bool Adafruit_ICM20789_BARO_Unified::begin() {
 		otp[i] = out[0]<<8 | out[1];
 	}
 
-  _c1 = otp[0];
-  _c2 = otp[1];
-  _c3 = otp[2];
-  _c4 = otp[3];
+  _c1 = (float)otp[0];
+  _c2 = (float)otp[1];
+  _c3 = (float)otp[2];
+  _c4 = (float)otp[3];
+
+  if (DEBUG_READING){
+    Serial.print("c1,c2,c3,c4 = ");
+    Serial.print(_c1); Serial.print(",");
+    Serial.print(_c2); Serial.print(",");
+    Serial.print(_c3); Serial.print(",");
+    Serial.print(_c4); Serial.println("");
+  }
 
   return true;
 }
@@ -659,23 +686,21 @@ void Adafruit_ICM20789_BARO_Unified::updateRawData(void) {
 
   // Send a measurement command (Trasmit P first, normal mode)
   Wire.beginTransmission(ICM20789_I2C_ADDRESS_PRESSURE);
-  Wire.write(0x48);
-  Wire.write(0xA3);
+  // (Trasmit P first, normal mode)
+  // Wire.write(0x48);
+  // Wire.write(0xA3);
+  // (Trasmit P first, Low Noise mode)
+  Wire.write(0x50);
+  Wire.write(0x59);
 
   Wire.endTransmission();
 
-  // There is a maximum delay of 6.3 mseconds after requesting new data
-  delayMicroseconds(6500);
-  //delay(100);
+  // There is a maximum delay of 6.3 mseconds after requesting new data for normal mode
+  // delayMicroseconds(6500);
+  // There is a maximum delay of 23.8 mseconds after requesting new data for low noise mode
+  delay(25);
 
   // Get the pressure and temperature raw data
-  Wire.beginTransmission(ICM20789_I2C_ADDRESS_PRESSURE);
-  Wire.write(0xC5);
-  Wire.write(0x95);
-  Wire.write(0x00);
-  Wire.write(0x66);
-  Wire.write(0x9C);
-
   Wire.requestFrom(ICM20789_I2C_ADDRESS_PRESSURE, 9);
 
   int i =0;
@@ -686,26 +711,29 @@ void Adafruit_ICM20789_BARO_Unified::updateRawData(void) {
     i++;
   }
 
-  Wire.endTransmission();
-  // Get the pressure and temperature raw data
-  /*
-  Serial.print("Data: ");
-  Serial.print(rawData[0], HEX); Serial.print(" ");
-  Serial.print(rawData[1], HEX); Serial.print(" ");
-  Serial.print(rawData[2], HEX); Serial.print(" ");
-  Serial.print(rawData[3], HEX); Serial.print(" ");
-  Serial.print(rawData[4], HEX); Serial.print(" ");
-  Serial.print(rawData[5], HEX); Serial.print(" ");
-  Serial.print(rawData[6], HEX); Serial.print(" ");
-  Serial.print(rawData[7], HEX); Serial.print(" ");
-  Serial.print(rawData[8], HEX); Serial.println(" ");
-  */
   temp_raw = rawData[6] << 8 | rawData[7];
 	// Pressure raw data
 	press_raw = (rawData[0]<<(8*2)) | (rawData[1]<<(8*1)) | (rawData[3]<<(8*0));
-
   // With the raw data, get the temperature data (this is done in another function)
   // LastTemperature = -45.f + 175.f/65536.f * (float)temp_raw;
+
+  if (DEBUG_READING){
+    Serial.print("rawData = [");
+    pp_hex(rawData[0]); Serial.print(",");
+    pp_hex(rawData[1]); Serial.print(",");
+    pp_hex(rawData[2]); Serial.print(",");
+    pp_hex(rawData[3]); Serial.print(",");
+    pp_hex(rawData[4]); Serial.print(",");
+    pp_hex(rawData[5]); Serial.print(",");
+    pp_hex(rawData[6]); Serial.print(",");
+    pp_hex(rawData[7]); Serial.print(",");
+    pp_hex(rawData[8]); Serial.println("]");
+    Serial.print("press_raw = ");
+    Serial.println(press_raw);
+    Serial.print("temp_raw = ");
+    Serial.println(temp_raw);
+  }
+
 }
 
 /**************************************************************************/
@@ -734,6 +762,28 @@ void Adafruit_ICM20789_BARO_Unified::calculateConversionConstants(void) {
   (p_LUT[0] - p_LUT[1]);
 
   B = (p_Pa[0] - A) * (p_LUT[0] + C);
+
+  if (DEBUG_READING){
+    char str[30];
+    sprintf(str, "%.2f", B );
+    //dtostrf(B,26,3,str);
+    Serial.print("p_LUT = [");
+    Serial.print(p_LUT[0]);
+    Serial.print(",");
+    Serial.print(p_LUT[1]);
+    Serial.print(",");
+    Serial.print(p_LUT[2]);
+    Serial.println("]");
+    Serial.print("A,B,C,t = ");
+    Serial.print(A);
+    Serial.print(",");
+    Serial.print(str);
+    Serial.print(",");
+    Serial.print(C);
+    Serial.print(",");
+    Serial.print(t);
+    Serial.println("");
+  }
 }
 
 /**************************************************************************/
@@ -755,6 +805,11 @@ float Adafruit_ICM20789_BARO_Unified::getPress(void) {
   LastPressure = A + B / (C + press_raw);
   // Pressure is obtained in pascals, convert it to HectoPascals
   LastPressure = LastPressure/100.0f;
+
+  if (DEBUG_READING){
+    Serial.print("press = ");
+    Serial.println(LastPressure, 4);
+  }
 
   return LastPressure;
 }
@@ -813,4 +868,11 @@ void Adafruit_ICM20789_BARO_Unified::getSensor(sensor_t *sensor) {
 void Adafruit_ICM20789_BARO_Unified::print_pressure_temp(){
   Serial.print(LastPressure); Serial.print("  ");
   Serial.print(LastTemperature); Serial.print("  ");
+}
+
+// pretty print hex character
+void pp_hex(char c){
+  char buf[2];
+  sprintf(buf, "\"%02X\"", c);
+  Serial.print(buf);
 }

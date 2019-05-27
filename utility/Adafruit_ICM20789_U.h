@@ -193,7 +193,7 @@ class Adafruit_ICM20789_BARO_Unified : public Adafruit_Sensor {
   void processRawData();
 
   // internal pressure coefficients (init at startup, reading the sensor)
-  int16_t _c1, _c2, _c3, _c4;
+  float _c1, _c2, _c3, _c4;
   // internal constants used by the pressure algorithm
   const float p_Pa[3] = {45000.0, 80000.0, 105000.0};
 	const float LUT_lower = 3.5 * (1<<20);
