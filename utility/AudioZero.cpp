@@ -36,7 +36,7 @@ void AudioZeroClass::begin(uint32_t sampleRate) {
 	__WavSamples = (uint8_t *) malloc(__NumberOfSamples * sizeof(uint8_t));
 
 	/*Modules configuration */
-  dacConfigure();
+  	dacConfigure();
 	tcConfigure(sampleRate);
 }
 
@@ -99,60 +99,60 @@ void AudioZeroClass::dacConfigure(void){
  */
  void AudioZeroClass::tcConfigure(uint32_t sampleRate)
 {
-	// Enable GCLK for TCC2 and TC5 (timer counter input clock)
-	GCLK->CLKCTRL.reg = (uint16_t) (GCLK_CLKCTRL_CLKEN | GCLK_CLKCTRL_GEN_GCLK0 | GCLK_CLKCTRL_ID(GCM_TC4_TC5)) ;
+	// Enable GCLK for TC4 and TC3 (timer counter input clock)
+	GCLK->CLKCTRL.reg = (uint16_t) (GCLK_CLKCTRL_CLKEN | GCLK_CLKCTRL_GEN_GCLK0 | GCLK_CLKCTRL_ID(GCM_TCC2_TC3)) ;
 	while (GCLK->STATUS.bit.SYNCBUSY);
 
 	tcReset();
 
 	// Set Timer counter Mode to 16 bits
-	TC5->COUNT16.CTRLA.reg |= TC_CTRLA_MODE_COUNT16;
+	TC3->COUNT16.CTRLA.reg |= TC_CTRLA_MODE_COUNT16;
 
-	// Set TC5 mode as match frequency
-	TC5->COUNT16.CTRLA.reg |= TC_CTRLA_WAVEGEN_MFRQ;
+	// Set TC3 mode as match frequency
+	TC3->COUNT16.CTRLA.reg |= TC_CTRLA_WAVEGEN_MFRQ;
 
-	TC5->COUNT16.CTRLA.reg |= TC_CTRLA_PRESCALER_DIV1 | TC_CTRLA_ENABLE;
+	TC3->COUNT16.CTRLA.reg |= TC_CTRLA_PRESCALER_DIV1 | TC_CTRLA_ENABLE;
 
-	TC5->COUNT16.CC[0].reg = (uint16_t) (SystemCoreClock / sampleRate - 1);
+	TC3->COUNT16.CC[0].reg = (uint16_t) (SystemCoreClock / sampleRate - 1);
 	while (tcIsSyncing());
 
 	// Configure interrupt request
-	NVIC_DisableIRQ(TC5_IRQn);
-	NVIC_ClearPendingIRQ(TC5_IRQn);
-	NVIC_SetPriority(TC5_IRQn, 0);
-	NVIC_EnableIRQ(TC5_IRQn);
+	NVIC_DisableIRQ(TC3_IRQn);
+	NVIC_ClearPendingIRQ(TC3_IRQn);
+	NVIC_SetPriority(TC3_IRQn, 0);
+	NVIC_EnableIRQ(TC3_IRQn);
 
-	// Enable the TC5 interrupt request
-	TC5->COUNT16.INTENSET.bit.MC0 = 1;
+	// Enable the TC3 interrupt request
+	TC3->COUNT16.INTENSET.bit.MC0 = 1;
 	while (tcIsSyncing());
 }
 
 
 bool AudioZeroClass::tcIsSyncing()
 {
-  return TC5->COUNT16.STATUS.reg & TC_STATUS_SYNCBUSY;
+  return TC3->COUNT16.STATUS.reg & TC_STATUS_SYNCBUSY;
 }
 
 void AudioZeroClass::tcStartCounter()
 {
   // Enable TC
 
-  TC5->COUNT16.CTRLA.reg |= TC_CTRLA_ENABLE;
+  TC3->COUNT16.CTRLA.reg |= TC_CTRLA_ENABLE;
   while (tcIsSyncing());
 }
 
 void AudioZeroClass::tcReset()
 {
   // Reset TCx
-  TC5->COUNT16.CTRLA.reg = TC_CTRLA_SWRST;
+  TC3->COUNT16.CTRLA.reg = TC_CTRLA_SWRST;
   while (tcIsSyncing());
-  while (TC5->COUNT16.CTRLA.bit.SWRST);
+  while (TC3->COUNT16.CTRLA.bit.SWRST);
 }
 
 void AudioZeroClass::tcDisable()
 {
-  // Disable TC5
-  TC5->COUNT16.CTRLA.reg &= ~TC_CTRLA_ENABLE;
+  // Disable TC3
+  TC3->COUNT16.CTRLA.reg &= ~TC_CTRLA_ENABLE;
   while (tcIsSyncing());
 }
 
@@ -169,16 +169,16 @@ void Audio_Handler (void)
     analogWrite(A0, __WavSamples[__SampleIndex++]);
 
     // Clear the interrupt
-    TC5->COUNT16.INTFLAG.bit.MC0 = 1;
+    TC3->COUNT16.INTFLAG.bit.MC0 = 1;
   }
   else
   {
     __SampleIndex = 0;
-    TC5->COUNT16.INTFLAG.bit.MC0 = 1;
+    TC3->COUNT16.INTFLAG.bit.MC0 = 1;
 	}
 }
 
-void TC5_Handler (void) __attribute__ ((weak, alias("Audio_Handler")));
+void TC3_Handler (void) __attribute__ ((weak, alias("Audio_Handler")));
 
 #ifdef __cplusplus
 }

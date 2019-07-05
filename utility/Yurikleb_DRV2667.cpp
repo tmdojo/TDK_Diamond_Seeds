@@ -1,4 +1,4 @@
-/*
+﻿/*
   Yurikleb_DRV2667.h - Library for controling the TI - DRV2667 Hapic Piezo Driver
   Created by Yuri Klenaov, January, 2016. (yurikleb.com)
   Released into the public domain.
@@ -28,12 +28,12 @@ void Yurikleb_DRV2667::begin() {
 //Send a Wave to the DRV2667
 void Yurikleb_DRV2667::playWave(byte WaveForm[][4], byte WavesNumber) {
 
-  Serial.println("Playing WaveForm:");
-  Serial.print("Containing: "); Serial.print(WavesNumber / 4); Serial.println(" waves:");
+  //Serial.println("Playing WaveForm:");
+  //Serial.print("Containing: "); //Serial.print(WavesNumber / 4); //Serial.println(" waves:");
   for (int j=0; j < WavesNumber/4; j++){
-    Serial.print("Ampl: "); Serial.print(WaveForm[j][0]);  Serial.print("  |  Freq: "); Serial.print(WaveForm[j][1]);    Serial.print("  |  Duration: "); Serial.print(1000 * (WaveForm[j][2] / (7.8125 * WaveForm[j][1]))); Serial.print("ms");  Serial.print("  |  Env: 0x"); Serial.println(WaveForm[j][3], HEX);
+    //Serial.print("Ampl: "); //Serial.print(WaveForm[j][0]);  //Serial.print("  |  Freq: "); //Serial.print(WaveForm[j][1]);    //Serial.print("  |  Duration: "); //Serial.print(1000 * (WaveForm[j][2] / (7.8125 * WaveForm[j][1]))); //Serial.print("ms");  //Serial.print("  |  Env: 0x"); //Serial.println(WaveForm[j][3], HEX);
   }
-  Serial.println("");
+  //Serial.println("");
   //control
   writeRegisterBytes(0x02, 0x00); //Take device out of standby mode
   writeRegisterBytes(0x01, 0x03); //Set Gain 0-3 (0x00-0x03 25v-100v)
@@ -68,8 +68,9 @@ void Yurikleb_DRV2667::setToAnalogInput(){
   Serial.println("Switching to Analog Input Mode");
   //control
   writeRegisterBytes(0x02, 0x00); //Take device out of standby mode
-  writeRegisterBytes(0x02, 0x02); //Set EN_OVERRIDE bit = boost and amplifier active
   writeRegisterBytes(0x01, 0x07); //Set to analog input + Gain 0-3 (0x04-0x07 25v-100v)
+  writeRegisterBytes(0x02, 0x02); //Set EN_OVERRIDE bit = boost and amplifier active
+
 
 }
 

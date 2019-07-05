@@ -38,7 +38,6 @@ Adafruit_ADS1115 ads(0x48);
 Yurikleb_DRV2667 drv;
 bool switch_AS=false;
 
-
 #define MODE_6AXIS 1 //1 equals I2C, use 0 for SPI
 #define SAMPLE_DIV 0 //Sample rate = 1khz/(1+Sample_Div)
 #define USE_BYPASS 1 // bypass the aux I2C lines, use the main one
@@ -66,6 +65,9 @@ void TDK_DiamondSeeds::begin(void){
   accel.begin();
   gyro.begin();
   pressure.begin();
+  drv.begin();
+  AudioZero.begin(44100*2);
+  AudioZero.end();
 
   pinMode(AUDIOPIN, OUTPUT);
   pinMode(THERMISTORPIN,INPUT);
@@ -129,60 +131,36 @@ float TDK_DiamondSeeds::Tesla(void){
 
 }
 
-// sensors_event_t is defined in Adafruit_Sensor.h
-// You can get acceleration values in m/s^2 unit
-bool TDK_DiamondSeeds::AccelEvent(sensors_event_t *event){
-  return accel.getEvent(event);
-}
-
-// acceleration in g
-// this is only valied with default range!
 float TDK_DiamondSeeds::AccelX(void){
   float ax;
   ax = accel.getX()*2*2/pow(2,16);
   return ax;
 }
 
-// acceleration in g
-// this is only valied with default range!
 float TDK_DiamondSeeds::AccelY(void){
   float ay;
   ay = accel.getY()*2*2/pow(2,16);
   return ay;
 }
 
-// acceleration in g
-// this is only valied with default range!
 float TDK_DiamondSeeds::AccelZ(void){
   float az;
   az = accel.getZ()*2*2/pow(2,16);
   return az;
 }
 
-// sensors_event_t is defined in Adafruit_Sensor.h
-// You can get angular velocity values in rad/s unit
-bool TDK_DiamondSeeds::GyroEvent(sensors_event_t *event){
-  return gyro.getEvent(event);
-}
-
-// angular velocity in Degrees/s
-// this is only valied with default range!
 float TDK_DiamondSeeds::GyroX(void){
   float gx;
   gx = gyro.getX()*2*250/pow(2,16);
   return gx;
 }
 
-// angular velocity in Degrees/s
-// this is only valied with default range!
 float TDK_DiamondSeeds::GyroY(void){
   float gy;
   gy = gyro.getY()*2*250/pow(2,16);
   return gy;
 }
 
-// angular velocity in Degrees/s
-// this is only valied with default range!
 float TDK_DiamondSeeds::GyroZ(void){
   float gz;
   gz = gyro.getZ()*2*250/pow(2,16);
@@ -202,13 +180,20 @@ float TDK_DiamondSeeds::GetTemperature(void){
 }
 
 void TDK_DiamondSeeds::switchAnalog(void){
+  SD.begin(4);
+/*  delay(100);
 
-  delay(100);
+// setup SD-card
+  if (SD.begin(4)) {
 
+    // 44100kHz stereo => 88200 sample rate
+    AudioZero.begin(44100*2);
+    switch_AS=true;
+
+  }
+*/
   //drv.begin();
   drv.setToAnalogInput();  //Swithch To Analog
-
-  SD.begin(4);
 
 }
 
@@ -225,6 +210,9 @@ void TDK_DiamondSeeds::PlayWavFile(char wavfile[]){
 
 void TDK_DiamondSeeds::PlayWave(byte WaveForm[][4], byte WavesNumber){
 
+//    WaveForm[0][1]/=7.8125;
+//    WaveForm[0][2]/=1000/WaveForm[0][1];
+    
     drv.playWave(WaveForm, sizeof(WaveForm)); //Play one the Waveforms defined above;
 
 }

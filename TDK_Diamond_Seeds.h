@@ -63,11 +63,9 @@ class TDK_DiamondSeeds {
     float MagneticAngle(void);
     float MagneticAngleRadian(void);
     float Tesla(void);
-    bool AccelEvent(sensors_event_t *event);
     float AccelX(void);
     float AccelY(void);
     float AccelZ(void);
-    bool GyroEvent(sensors_event_t *event);
     float GyroX(void);
     float GyroY(void);
     float GyroZ(void);
