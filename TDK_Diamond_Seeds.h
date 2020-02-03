@@ -41,7 +41,17 @@
 #define LEFTBUTTON 5  ///< left button pin
 #define RIGHTBUTTON 6 ///< right button pin
 #define SLIDESWITCH 10 ///< slide switch pin
-
+#define OUTPUT_AMP_0 0 ///< Min output amplitude[mV] for Tesla()
+#define OUTPUT_AMP_1 1250 ///< Second in output amplitude[mV] for Tesla()
+#define OUTPUT_AMP_2 2300 ///< Third output amplitude[mV] for Tesla()
+#define OUTPUT_AMP_3 2950 ///< Forth output amplitude[mV] for Tesla()
+#define OUTPUT_AMP_4 3000 ///< Max output amplitude[mV] for Tesla()
+#define MAGNETIC_FIELD_0 0 ///< Min magnetic field strenght[mT] for Tesla()
+#define MAGNETIC_FIELD_1 5 ///< Second magnetic field strenght[mT] for Tesla()
+#define MAGNETIC_FIELD_2 10 ///< Third magnetic field strenght[mT] for Tesla()
+#define MAGNETIC_FIELD_3 15 ///< Forth magnetic field strenght[mT] for Tesla()
+#define MAGNETIC_FIELD_4 20 ///< Max magnetic field strenght[mT] for Tesla()
+#define TAP_LENGTH  20 ///< Tap lengh  for Filter()
 /*!
   @brief Configuration to tune the color sensing logic:
    Amount of time (in milliseconds) to wait between
@@ -70,6 +80,7 @@ class TDK_DiamondSeeds {
     float GyroY(void);
     float GyroZ(void);
     float GetPressure(void);
+	float Filter(float input);
     float GetTemperature(void);
     void switchAnalog(void);
     void beginDigital(void);
@@ -103,7 +114,9 @@ class TDK_DiamondSeeds {
     float cos_mv;
     float angle_rad;
     float angle;
-    float rho;
+    float amp;
+    float mfs;
+    float buffer[TAP_LENGTH];
 
 };
 

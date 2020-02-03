@@ -125,9 +125,20 @@ float TDK_DiamondSeeds::Tesla(void){
   sin_mv = results0_1;
   cos_mv = results2_3;
 
-  rho = sqrt(sq(sin_mv)+sq(cos_mv));
+  amp = sqrt(sq(sin_mv)+sq(cos_mv));
+  if (amp < OUTPUT_AMP_1) {
+    mfs = MAGNETIC_FIELD_0+(MAGNETIC_FIELD_1-MAGNETIC_FIELD_0)*(amp-OUTPUT_AMP_0)/(OUTPUT_AMP_1-OUTPUT_AMP_0);
+  }else if (amp  < OUTPUT_AMP_2) {
+    mfs = MAGNETIC_FIELD_1+(MAGNETIC_FIELD_2-MAGNETIC_FIELD_1)*(amp-OUTPUT_AMP_1)/(OUTPUT_AMP_2-OUTPUT_AMP_1);
+  }else if (amp  < OUTPUT_AMP_3) {
+    mfs = MAGNETIC_FIELD_2+(MAGNETIC_FIELD_3-MAGNETIC_FIELD_2)*(amp-OUTPUT_AMP_2)/(OUTPUT_AMP_3-OUTPUT_AMP_2);
+  }else if (amp  < OUTPUT_AMP_4) {
+    mfs = MAGNETIC_FIELD_3+(MAGNETIC_FIELD_4-MAGNETIC_FIELD_3)*(amp-OUTPUT_AMP_3)/(OUTPUT_AMP_4-OUTPUT_AMP_3);
+  }else if (amp  >= OUTPUT_AMP_4) {
+    mfs = MAGNETIC_FIELD_4;
+  }
 
-  return rho/100;
+  return mfs;
 
 }
 
@@ -171,6 +182,40 @@ float TDK_DiamondSeeds::GetPressure(void){
   float press;
   press = pressure.getPress();
   return press;
+}
+
+float TDK_DiamondSeeds::Filter(float input){
+  float output;
+  float coeff[TAP_LENGTH] {0.0071,
+                           0.0010,
+                           0.0179,
+                           0.0303,
+                           0.0459,
+                           0.0629,
+                           0.0792,
+                           0.0927,
+                           0.1016,
+                           0.1047,
+                           0.1016,
+                           0.0927,
+                           0.0792,
+                           0.0629,
+                           0.0459,
+                           0.0303,
+                           0.0179,
+                           0.0010,
+                           0.0071,
+                           0.0000};
+
+  for (int i=(TAP_LENGTH-1); i>0 ; i--) {
+    buffer[i] = buffer[i-1];
+  }
+  buffer[0] = input;
+  output = 0;
+  for (int i=0; i<TAP_LENGTH ; i++) {
+    output += buffer[i]*coeff[i];
+  }
+  return output;
 }
 
 float TDK_DiamondSeeds::GetTemperature(void){
