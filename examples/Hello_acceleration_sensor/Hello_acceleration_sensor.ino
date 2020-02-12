@@ -8,7 +8,7 @@ void setup() {
 
 void loop() {
 
-  // unit is in g (i.e. normalized to 9.80665F m/s^2, Earth's gravity)
+  // unit is m/s^2
 
   Ax = TDSs.AccelX();
   Ay = TDSs.AccelY();

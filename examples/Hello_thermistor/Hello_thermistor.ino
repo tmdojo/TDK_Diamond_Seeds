@@ -7,8 +7,9 @@ void setup() {
 }
 
 
-void loop()
-{
+void loop(){
+
+  // unit is in degrees C
 
   Tt = TDSs.Thermistor();
 

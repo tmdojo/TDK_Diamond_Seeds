@@ -20,7 +20,7 @@ AccelZ		KEYWORD2
 GyroX		KEYWORD2
 GyroY		KEYWORD2
 GyroZ		KEYWORD2
-GetPressure		KEYWORD2
+Pressure		KEYWORD2
 Filter		KEYWORD2
 switchAnalog		KEYWORD2
 beginDigital		KEYWORD2

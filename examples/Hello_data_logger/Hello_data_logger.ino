@@ -5,7 +5,7 @@ float Ax,Ay,Az;
 float Gx,Gy,Gz;
 float Pa;
 float dB;
-float Angle,Angle_rad,Tesla;
+float Angle,Angle_rad,Mfd;
 float Tt;
 
 File Logfile;
@@ -54,7 +54,7 @@ void setup() {
   Logfile.print(" ,");
   Logfile.print("Angle_rad[rad]");
   Logfile.print(" ,");
-  Logfile.print("Tesla[mT]");
+  Logfile.print("Mfd[mT]");
   Logfile.print(" ,");
   Logfile.println("T[degC]");
   Logfile.flush();
@@ -75,7 +75,7 @@ void loop() {
   dB = TDSs.SoundPressure();
   Angle = TDSs.MagneticAngle();
   Angle_rad = TDSs.MagneticAngleRadian();
-  Tesla = TDSs.Tesla();
+  Mfd = TDSs.Tesla();
   Tt = TDSs.Thermistor();
 
   Serial.print("Gx: ");
@@ -109,7 +109,7 @@ void loop() {
   Serial.print(Angle_rad);
   Serial.print(" ,");
   Serial.print("Tesla: ");
-  Serial.print(Tesla);
+  Serial.print(Mfd);
   Serial.print(" ,");
   Serial.print("temperature: ");
   Serial.println(Tt);
@@ -136,7 +136,7 @@ void loop() {
   Logfile.print(" ,");
   Logfile.print(Angle_rad);
   Logfile.print(" ,");
-  Logfile.print(Tesla);
+  Logfile.print(Mfd);
   Logfile.print(" ,");
   Logfile.println(Tt);
   Logfile.flush();

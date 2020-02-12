@@ -1,6 +1,6 @@
 #include <TDK_Diamond_Seeds.h>
 
-float Angle,Angle_rad,Tesla;
+float Angle,Angle_rad,Mdf;
 
 void setup(void)
 {
@@ -9,9 +9,14 @@ void setup(void)
 
 void loop(void)
 {
+
+    // Angle unit is in Dgrees
+    // Angle_rad unit is in rad
+    // Mdf unit is in mT
+
   Angle = TDSs.MagneticAngle();
   Angle_rad = TDSs.MagneticAngleRadian();
-  Tesla = TDSs.Tesla();
+  Mdf = TDSs.Tesla();
 
   Serial.print("Angle: ");
   Serial.print(Angle);
@@ -20,7 +25,7 @@ void loop(void)
   Serial.print(Angle_rad);
   Serial.print(" ,");
   Serial.print("Tesla: ");
-  Serial.println(Tesla);
+  Serial.println(Mdf);
 
   delay(100);
 }

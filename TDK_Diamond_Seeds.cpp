@@ -1,8 +1,3 @@
-
-// Note that this is a simple way to derive angle with limited accuracy
-// TDK has developed elavorated correction algorithm to achieve higher accuracy.
-// Please contact TDK for details.
-
 /*!
  * @file Adafruit_CircuitPlayground.cpp
  *
@@ -36,6 +31,7 @@
 
 Adafruit_ADS1115 ads(0x48);
 Yurikleb_DRV2667 drv;
+sensors_event_t event;
 bool switch_AS=false;
 
 #define MODE_6AXIS 1 //1 equals I2C, use 0 for SPI
@@ -43,9 +39,10 @@ bool switch_AS=false;
 #define USE_BYPASS 1 // bypass the aux I2C lines, use the main one
 
 /* Assign a unique ID to all snsors used with the adafruit standard*/
-Adafruit_ICM20789_ACC_Unified accel = Adafruit_ICM20789_ACC_Unified(14, MODE_6AXIS, ICM20789_ACC_RANGE_2_G);
-Adafruit_ICM20789_GYRO_Unified gyro = Adafruit_ICM20789_GYRO_Unified(28, MODE_6AXIS, ICM20789_GYRO_RANGE_250_DPS);
+Adafruit_ICM20789_ACC_Unified accel = Adafruit_ICM20789_ACC_Unified(14, MODE_6AXIS, ICM20789_ACC_RANGE_16_G);
+Adafruit_ICM20789_GYRO_Unified gyro = Adafruit_ICM20789_GYRO_Unified(28, MODE_6AXIS, ICM20789_GYRO_RANGE_2000_DPS);
 Adafruit_ICM20789_BARO_Unified pressure = Adafruit_ICM20789_BARO_Unified(44, USE_BYPASS, MODE_6AXIS);
+
 
 /**************************************************************************/
 /*!
@@ -56,18 +53,6 @@ Adafruit_ICM20789_BARO_Unified pressure = Adafruit_ICM20789_BARO_Unified(44, USE
 /**************************************************************************/
 
 void TDK_DiamondSeeds::begin(void){
-  Wire.begin();
-  Serial.begin(9600);
-  ads.begin();
-  configureICM20789(MODE_6AXIS, SAMPLE_DIV);
-  startICM20789_6axis(MODE_6AXIS);
-  delay(500);
-  accel.begin();
-  gyro.begin();
-  pressure.begin();
-  drv.begin();
-  AudioZero.begin(44100*2);
-  AudioZero.end();
 
   pinMode(AUDIOPIN, OUTPUT);
   pinMode(THERMISTORPIN,INPUT);
@@ -75,7 +60,17 @@ void TDK_DiamondSeeds::begin(void){
   pinMode(RIGHTBUTTON, INPUT_PULLDOWN);
   pinMode(SLIDESWITCH, INPUT_PULLUP);
 
-  strip = Adafruit_CPlay_NeoPixel();
+  Wire.begin();
+  Serial.begin(9600);
+  configureICM20789(MODE_6AXIS, SAMPLE_DIV);
+  startICM20789_6axis(MODE_6AXIS);
+  delay(500);
+  accel.begin();
+  gyro.begin();
+  pressure.begin();
+  AudioZero_TDSs.begin(44100*2);
+  AudioZero_TDSs.end();
+  strip = Adafruit_NeoPixel();
   strip.updateType(NEO_GRB + NEO_KHZ800);
   strip.updateLength(12);
   strip.setPin(NEOPIXELPIN);
@@ -85,9 +80,10 @@ void TDK_DiamondSeeds::begin(void){
 
   // start I2S at 16 kHz with 32-bits per sample
   if (!I2S.begin(I2S_PHILIPS_MODE, 16000, 32)) {
-  //Serial.println("Failed to initialize I2S!");
+  Serial.println("Failed to initialize I2S!");
   while (1); // do nothing
   }
+
 }
 
 float TDK_DiamondSeeds::MagneticAngle(void){
@@ -144,50 +140,57 @@ float TDK_DiamondSeeds::Tesla(void){
 
 float TDK_DiamondSeeds::AccelX(void){
   float ax;
-  ax = accel.getX()*2*2/pow(2,16);
+  accel.getEvent(&event);
+  ax = event.acceleration.x;
   return ax;
 }
 
 float TDK_DiamondSeeds::AccelY(void){
   float ay;
-  ay = accel.getY()*2*2/pow(2,16);
+  accel.getEvent(&event);
+  ay = event.acceleration.y;
   return ay;
 }
 
 float TDK_DiamondSeeds::AccelZ(void){
   float az;
-  az = accel.getZ()*2*2/pow(2,16);
+  accel.getEvent(&event);
+  az = event.acceleration.z;
   return az;
 }
 
 float TDK_DiamondSeeds::GyroX(void){
   float gx;
-  gx = gyro.getX()*2*250/pow(2,16);
+  gyro.getEvent(&event);
+  gx = event.gyro.x;
   return gx;
 }
 
 float TDK_DiamondSeeds::GyroY(void){
   float gy;
-  gy = gyro.getY()*2*250/pow(2,16);
+  gyro.getEvent(&event);
+  gy = event.gyro.y;
   return gy;
 }
 
 float TDK_DiamondSeeds::GyroZ(void){
   float gz;
-  gz = gyro.getZ()*2*250/pow(2,16);
+  gyro.getEvent(&event);
+  gz = event.gyro.z;
   return gz;
 }
 
-float TDK_DiamondSeeds::GetPressure(void){
+float TDK_DiamondSeeds::Pressure(void){
   float press;
-  press = pressure.getPress();
+  pressure.getEvent(&event);
+  press = event.pressure;
   return press;
 }
 
 float TDK_DiamondSeeds::Filter(float input){
   float output;
   float coeff[TAP_LENGTH] {0.0071,
-                           0.0010,
+                           0.0101,
                            0.0179,
                            0.0303,
                            0.0459,
@@ -195,7 +198,7 @@ float TDK_DiamondSeeds::Filter(float input){
                            0.0792,
                            0.0927,
                            0.1016,
-                           0.1047,
+                           0.1046,
                            0.1016,
                            0.0927,
                            0.0792,
@@ -203,7 +206,7 @@ float TDK_DiamondSeeds::Filter(float input){
                            0.0459,
                            0.0303,
                            0.0179,
-                           0.0010,
+                           0.0101,
                            0.0071,
                            0.0000};
 
@@ -218,38 +221,21 @@ float TDK_DiamondSeeds::Filter(float input){
   return output;
 }
 
-float TDK_DiamondSeeds::GetTemperature(void){
-  float Temp;
-  Temp = pressure.getTemp();
-  return Temp;
-}
-
 void TDK_DiamondSeeds::switchAnalog(void){
   SD.begin(4);
-/*  delay(100);
 
-// setup SD-card
-  if (SD.begin(4)) {
-
-    // 44100kHz stereo => 88200 sample rate
-    AudioZero.begin(44100*2);
-    switch_AS=true;
-
-  }
-*/
-  //drv.begin();
   drv.setToAnalogInput();  //Swithch To Analog
 
 }
 
 void TDK_DiamondSeeds::PlayWavFile(char wavfile[]){
 
-  AudioZero.begin(44100*2);
+  AudioZero_TDSs.begin(44100*2);
   File myFile = SD.open(wavfile);
   Serial.print("Play:");
   Serial.println(wavfile);
-  AudioZero.play(myFile);
-  AudioZero.end();
+  AudioZero_TDSs.play(myFile);
+  AudioZero_TDSs.end();
 
 }
 
@@ -257,7 +243,7 @@ void TDK_DiamondSeeds::PlayWave(byte WaveForm[][4], byte WavesNumber){
 
 //    WaveForm[0][1]/=7.8125;
 //    WaveForm[0][2]/=1000/WaveForm[0][1];
-    
+
     drv.playWave(WaveForm, sizeof(WaveForm)); //Play one the Waveforms defined above;
 
 }
@@ -290,19 +276,6 @@ float TDK_DiamondSeeds::Thermistor(void) {
   steinhart -= 273.15;                         // convert to C
 
   return steinhart;
-}
-
-uint32_t TDK_DiamondSeeds::colorWheel(uint8_t WheelPos) {
-  WheelPos = 255 - WheelPos;
-  if (WheelPos < 85) {
-    return strip.Color(255 - WheelPos * 3, 0, WheelPos * 3);
-  }
-  if (WheelPos < 170) {
-    WheelPos -= 85;
-    return strip.Color(0, WheelPos * 3, 255 - WheelPos * 3);
-  }
-  WheelPos -= 170;
-  return strip.Color(WheelPos * 3, 255 - WheelPos * 3, 0);
 }
 
 boolean TDK_DiamondSeeds::slideSwitch(void) {

@@ -1,19 +1,18 @@
 # How to use TDK Diamond Seeds Library
 
-This is a library for the TDK Diamond Seeds boards.
+This is library for TDK Diamond Seeds.
 To use this library, the following library must be installed.
 Please install the following libraries according to the installation.
 
 ## Installation
 
-1. download the following libraries
+1. download the following 4 zip files
+1. In the Arduino IDE, navigate to Sketch > Include Library > Add .ZIP Library and include the following 4 zip files
+
 - [Adafruit NeoPixel Library](https://github.com/adafruit/Adafruit_NeoPixel/archive/master.zip).
 - [Adafruit ADS1015 Library](https://github.com/adafruit/Adafruit_ADS1X15/archive/master.zip).
 - [Adafruit Unified Sensor Driver](https://github.com/adafruit/Adafruit_Sensor/archive/master.zip).
 - [DRV2667 Library](https://github.com/yurikleb/DRV2667/archive/master.zip).
-
-1. Extract the zip file
-1. In the Arduino IDE, navigate to Sketch > Include Library > Add .ZIP Library
 
 ## License
 

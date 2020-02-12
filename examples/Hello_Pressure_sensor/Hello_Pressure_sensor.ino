@@ -1,5 +1,8 @@
 #include <TDK_Diamond_Seeds.h>
 
+// measurement takes about 6.5ms in Normal mode
+// measurement takes about 25ms in Low Noise mode (default)
+
 float Pa;
 
 void setup() {
@@ -10,15 +13,12 @@ void setup() {
 
 void loop() {
 
-  // measurement takes about 6.5ms in Normal mode
-  // measurement takes about 25ms in Low Noise mode (default)
-  Pa=TDSs.GetPressure();
+  // unit is in Pascals
 
-  // GetPressure returns in HectoPascals
-  //Serial.print("Pressure ");
-  //Serial.println(Pa);
+  Pa=TDSs.Pressure();
 
-  // Open serial plotter to check reading
-  // it's more obvious to see effect in Pascals
-  Serial.println(Pa*100);
+  Serial.println(Pa);
+
+  delay(100);
+
 }

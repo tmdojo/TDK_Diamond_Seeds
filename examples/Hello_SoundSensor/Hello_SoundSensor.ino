@@ -8,6 +8,8 @@ void setup() {
 
 void loop() {
 
+  // unit is in SoundPressureLevel[a.u.]
+
    dB = TDSs.SoundPressure();
 
   Serial.print("Sound Sensor SPL: ");

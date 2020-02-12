@@ -794,7 +794,7 @@ void Adafruit_ICM20789_BARO_Unified::calculateConversionConstants(void) {
 void Adafruit_ICM20789_BARO_Unified::processRawData(void) {
   LastPressure = A + B / (C + press_raw);
   // Pressure is obtained in pascals, convert it to HectoPascals
-  LastPressure = LastPressure/100.0f;
+  //LastPressure = LastPressure/100.0f;
 
   LastTemperature = -45.f + (175.f/65536.f) * temp_raw;
 }
@@ -804,7 +804,7 @@ float Adafruit_ICM20789_BARO_Unified::getPress(void) {
   calculateConversionConstants();
   LastPressure = A + B / (C + press_raw);
   // Pressure is obtained in pascals, convert it to HectoPascals
-  LastPressure = LastPressure/100.0f;
+  //LastPressure = LastPressure/100.0f;
 
   if (DEBUG_READING){
     Serial.print("press = ");

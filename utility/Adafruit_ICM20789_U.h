@@ -21,7 +21,7 @@
  #include "WProgram.h"
 #endif
 
-#include "utility/Adafruit_Sensor.h"
+#include <Adafruit_Sensor.h>
 #include <Wire.h>
 #include <SPI.h>
 

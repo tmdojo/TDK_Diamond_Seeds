@@ -2,8 +2,8 @@
 
 boolean Check1,Check2,Check3,Check4,Check5,Check6,Check7,Check8,Check9,Check10,Check11,Check12;
 
-float Angle_i,Angle_rad_i,Tesla_i;
-float Angle,Angle_rad,Tesla;
+float Angle_i,Angle_rad_i,Mdf_i;
+float Angle,Angle_rad,Mdf;
 
 bool slideSwitch_i;
 bool slideSwitch;
@@ -44,11 +44,11 @@ void setup(void){
   Check12= true;
 
 //Puzzle1:increase magnetic power
-  Tesla_i = TDSs.Tesla();
+  Mdf_i = TDSs.Tesla();
   while(Check1){
-    Tesla = TDSs.Tesla();
-    Serial.println(abs(Tesla-Tesla_i));
-    if(abs(Tesla-Tesla_i)>20){
+    Mdf = TDSs.Tesla();
+    Serial.println(abs(Mdf-Mdf_i));
+    if(abs(Mdf-Mdf_i)>20){
       TDSs.setPixelColor(0, 255,   0,   0);
       Serial.println("Puzzle1:use magnet");
       Check1 = false;
@@ -148,9 +148,9 @@ void setup(void){
   }
 
 //Puzzle9:use pressure_sensor
-  Pa_i=TDSs.GetPressure();
+  Pa_i=TDSs.Pressure();
   while(Check9){
-    Pa=TDSs.GetPressure();
+    Pa=TDSs.Pressure();
     Serial.println(abs(Pa-Pa_i));
     if(abs(Pa-Pa_i)>0.05){
       TDSs.setPixelColor(9, 255,   0,   0);
