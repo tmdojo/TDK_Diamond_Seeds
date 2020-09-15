@@ -38,7 +38,7 @@ Please install the following libraries according to the installation.
 - TDSs.leftButton(void);
 - TDSs.rightButton(void);
 - TDSs.slideSwitch(void);
-- TDSs.LEDColor(uint8_t pix, uint8_t red, uint8_t green, uint8_t blue);
+- TDSs.setPixelColor(uint8_t pix, uint8_t red, uint8_t green, uint8_t blue);
 
 ## Examples
 There are many examples implemented in this library. One of the examples is below. You can find other examples [here](https://github.com/tmdojo/TDK_Diamond_Seeds/tree/master/examples).
